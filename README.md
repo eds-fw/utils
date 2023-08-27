@@ -4,7 +4,7 @@
 
 <b align="center">
     
-    Tiny TypeScript utils: wait(), arrayFromIterator(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more
+    Tiny TypeScript utils: wait(), arrayFromIterator(), chanceRandom(), equal() and more
     
 </b>
 <hr>
