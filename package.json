@@ -44,7 +44,7 @@
   "typesVersions": {
     ">=4.2": {
       "*": [
-        "dist/types/*"
+        "dist/types/index.d.ts"
       ]
     }
   }
