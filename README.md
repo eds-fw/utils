@@ -20,8 +20,10 @@
 - `includesAll(arr: any[], values: any[]): boolean`
 - `arrayFromIterator(iterator: IterableIterator<any>): any[]`
 - *async* `wait(time_ms: number): Promise<void>`
+
 # Requirements
 - [NodeJS](https://nodejs.org/en), recommended `v18` or newer
+
 # Setup
 1. Install `utils` via npm:
 ```bat
