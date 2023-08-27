@@ -7,4 +7,4 @@ test/
 index.ts
 assets/*.psd
 **/vault.json
-tsconfig.json
+tsconfig.*
