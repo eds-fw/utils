@@ -1,0 +1,2 @@
+@node ./benchmarks.js
+@pause
