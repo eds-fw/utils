@@ -14,7 +14,7 @@
     "tslib": "^2.6.1"
   },
   "name": "@easy-ds-bot/utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tiny TypeScript utils: wait(), arrayFromIterator(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more",
   "main": "index",
   "repository": {
