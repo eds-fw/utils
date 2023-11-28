@@ -10,6 +10,7 @@ const {
     chanceRandom,
     equal,
     quickTextCompare,
+    deepCopy
 } = require("../dist/cjs/index");
 const iterableMap = new Map([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]);
 
@@ -38,4 +39,11 @@ const iterableMap = new Map([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]);
     console.log(`\tquickTextCompare("first text of 5 words", "first text of 5 words")\n\t\t${quickTextCompare("first text of 5 words", "first text of 5 words")} / true [correct]`);
     console.log(`\tquickTextCompare("first text of 5 words", "second text of 5 words")\n\t\t${quickTextCompare("first text of 5 words", "second text of 5 words")} / true [correct]`);
     console.log(`\tquickTextCompare("first text of 5 words", "my second text of 6 words")\n\t\t${quickTextCompare("first text of 5 words", "my second text of 6 words")} / false [correct]`);
+
+    console.log(`\nDEEP COPY: ====================`);
+    let _source1 = { a: [1, 2, 3] };
+    let _copy1 = deepCopy(_source1);
+    _copy1.b = 999;
+    _copy1.a.push(777);
+    console.log(`\tdeepCopy({a:[1,2,3]})\n\t\tCOPY: ${JSON.stringify(_copy1)}\n\t\tSOURCE: ${JSON.stringify(_source1)}`);
 })();

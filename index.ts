@@ -139,3 +139,17 @@ export function arrayFromIterator<T>(iterator: IterableIterator<T>): T[]
         result.push(value);
     return result;
 }
+
+/**
+ * Creates a [deep copy](https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy) of an object
+ * 
+ * Supports only serializable objects (JSON-like)
+ */
+export function deepCopy<S extends JSONLike>(source: S): S
+{
+    return JSON.parse(JSON.stringify(source)) as S;
+}
+
+type SingleJSONSupportedValueTypes = string | number | boolean | object | null;
+export type JSONSupportedValueTypes = SingleJSONSupportedValueTypes | SingleJSONSupportedValueTypes[];
+export type JSONLike = Record<string, JSONSupportedValueTypes>;
