@@ -13,13 +13,13 @@
     "fast-deep-equal": "^3.1.3",
     "tslib": "^2.6.1"
   },
-  "name": "@easy-ds-bot/utils",
+  "name": "@eds-fw/utils",
   "version": "1.1.0",
-  "description": "Tiny TypeScript utils: wait(), arrayFromIterator(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more",
+  "description": "Tiny TypeScript utils: wait(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more",
   "main": "index",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/easy-ds-bot/utils.git"
+    "url": "git+https://github.com/eds-fw/utils.git"
   },
   "keywords": [
     "typescript",
@@ -30,9 +30,9 @@
   "license": "MIT",
   "types": "./dist/index.d.ts",
   "bugs": {
-    "url": "https://github.com/easy-ds-bot/utils/issues"
+    "url": "https://github.com/eds-fw/utils/issues"
   },
-  "homepage": "https://github.com/easy-ds-bot/utils#readme",
+  "homepage": "https://github.com/eds-fw/utils#readme",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",

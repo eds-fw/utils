@@ -3,7 +3,6 @@ const {
     reportMemory,
     includesAll,
     wait,
-    arrayFromIterator,
 
     random,
     arrRandom,
@@ -12,7 +11,6 @@ const {
     quickTextCompare,
     deepCopy
 } = require("../dist/cjs/index");
-const iterableMap = new Map([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]);
 
 ;(async () => {
     console.log(`\tformatNumber(1234567890)\n\t\t${formatNumber(1234567890)}`);
@@ -22,7 +20,6 @@ const iterableMap = new Map([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]);
     console.log(`\t\tbefore, time: ${Date.now()}`);
     await wait(1000);
     console.log(`\t\tafter, time: ${Date.now()}`);
-    console.log(`\tarrayFromIterator(iterableMap.values())\n\t\t${arrayFromIterator(iterableMap.values())}`);
 
     console.log(`\nRANDOM: ====================`);
     console.log(`\trandom(1, 1000) x5\n\t\t${random(1, 1000)} ${random(1, 1000)} ${random(1, 1000)} ${random(1, 1000)} ${random(1, 1000)}`);

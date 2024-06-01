@@ -1,5 +1,7 @@
 import arr_equal from "array-equal";
 import obj_equal from "fast-deep-equal";
+import { readdirSync, statSync } from "fs";
+import { join as path_join, sep } from "path";
 import { setTimeout } from "timers/promises";
 
 /**
@@ -38,7 +40,7 @@ export function random(min: number, max: number): number
 /**
  * Returns a random array element
  */
-export function arrRandom<T extends any>(arr: T[]): T
+export function arrRandom<T>(arr: T[]): T
 {
     return arr[random(0, arr.length - 1)];
 }
@@ -100,7 +102,6 @@ export function quickTextCompare(text1: string, text2: string): boolean
     for (const word of v2w)
         if (v1w.includes(word))
             v2eq++;
-    //
     if (v1eq + inaccuracy >= v2eq
         && v2eq + inaccuracy >= v1eq
         && v1eq + (inaccuracy * 1.5) >= v1w.length
@@ -115,9 +116,7 @@ export function quickTextCompare(text1: string, text2: string): boolean
 export function includesAll<T extends any[]>(arr: T, values: T): boolean
 {
     for (const value of values)
-    {
         if (!arr.includes(value)) return false;
-    }
     return true;
 }
 
@@ -130,26 +129,135 @@ export async function wait(time_ms: number): Promise<void>
 }
 
 /**
- * Turns an iterator into an array
- */
-export function arrayFromIterator<T>(iterator: IterableIterator<T>): T[]
-{
-    let result: T[] = [];
-    for (const value of iterator)
-        result.push(value);
-    return result;
-}
-
-/**
  * Creates a [deep copy](https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy) of an object
  * 
  * Supports only serializable objects (JSON-like)
  */
-export function deepCopy<S extends JSONLike>(source: S): S
+export function deepCopy<T extends JSONLikeObj>(source: T): T
 {
-    return JSON.parse(JSON.stringify(source)) as S;
+    return JSON.parse(JSON.stringify(source)) as T;
 }
 
-type SingleJSONSupportedValueTypes = string | number | boolean | object | null;
-export type JSONSupportedValueTypes = SingleJSONSupportedValueTypes | SingleJSONSupportedValueTypes[];
-export type JSONLike = Record<string, JSONSupportedValueTypes>;
+export namespace VersionBits
+{
+    export const zeroVersion = [0, 0];
+    export const delimiter = '.';
+
+    export function from(input: string): number[]
+    {
+        return Object.assign([], zeroVersion, input.split(delimiter).map(_ => Number(_))) as unknown as number[];
+    }
+    export function sum(version: number[], to_add: number[])
+    {
+        Object.assign(version, Object.assign(to_add.map(() => 0), version));
+        console.log(version)
+        to_add.forEach((x, i) => version[i] += x);
+    }
+    export function toString(version: number[]): string
+    {
+        return version.filter((x, i) => i > 1 ? x != 0 : true).join(delimiter);
+    }
+    /**
+     * @param majority `0` is 'patch', `1` is 'minor', `2` is 'major'
+     */
+    export function increase(version: number[], count: number, majority: number)
+    {
+        const reversed_majority = version.length - majority - 1;
+        version[reversed_majority] += count;
+        if (reversed_majority + 1 < version.length)
+            for (let i = reversed_majority + 1; i < version.length; i++)
+                version[i] = 0;
+    }
+
+}
+
+/**
+ * When the number of elements reaches the limit, the `PacketBuffer` is drained
+ */
+export class PacketBuffer<T>
+{
+    #total_elements_count = 0;
+    private stack: T[] = [];
+
+    public constructor(
+        private drain_callback: (items: T[]) => unknown,
+        private limit: number,
+        private auto_drain = true
+    ) {}
+
+    /**
+     * Number of elements for all time
+     */
+    public get total_elements_count()
+        { return this.#total_elements_count; }
+    public put(item: T)
+    {
+        this.#total_elements_count++;
+        this.stack.push(item);
+        this._check_limit();
+    }
+    public async forceDrain()
+    {
+        for (const output_elements of splitIntoPortions(this.stack, this.limit))
+            await this.drain_callback(output_elements);
+        this.stack = [];
+    }
+
+    private _check_limit()
+    {
+        if (this.auto_drain && this.stack.length >= this.limit)
+            this.forceDrain();
+    }
+
+    public [Symbol.dispose ?? "__dispose"] ()
+    {
+        if (this.stack.length > 0)
+            this.forceDrain();
+    }
+}
+
+
+/**
+ * Splits `[0,1,2,3,4,5,6,7,8,9]` to `[[0,1,2], [3,4,5], [6,7,8], [9]]` (if portionSize=3)
+ */
+export function splitIntoPortions<T>(arr: T[], portionSize: number): T[][]
+{
+    if (arr.length <= portionSize)
+        return [arr];
+    const output: T[][] = [[]];
+    for (let i = 0; i < arr.length; i++)
+        if (i % portionSize == 0)
+            output.push([arr[i]]);
+        else output.at(-1)?.push(arr[i]);
+    return output;
+}
+
+/**
+ * Expands the tree of the specified folder
+ */
+export function expandDir(dir_path: string): string[]
+{
+    const buffer: string[] = [];
+    _expandDir(dir_path, buffer);
+    if (dir_path.startsWith('./') || dir_path.startsWith('.\\'))
+        return buffer.map(path => '.' + sep + path);
+    return buffer;
+}
+function _expandDir(dir_path: string, /*ref*/ buffer: string[])
+{
+    const files = readdirSync(dir_path);
+
+    files.forEach(file => {
+        const filePath = path_join(dir_path, file);
+        const fileStat = statSync(filePath);
+        
+        buffer.push(filePath);
+
+        if (fileStat.isDirectory())
+            expandDir(filePath);
+    });
+}
+
+type SerializableTypes = string | number | boolean | object | null;
+export type JSONSupported = SerializableTypes | SerializableTypes[];
+export type JSONLikeObj = Record<string, JSONSupported>;
