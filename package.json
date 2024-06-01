@@ -14,7 +14,7 @@
     "tslib": "^2.6.1"
   },
   "name": "@eds-fw/utils",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Tiny TypeScript utils: wait(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more",
   "main": "index",
   "repository": {
