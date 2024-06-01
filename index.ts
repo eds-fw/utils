@@ -171,10 +171,13 @@ export namespace VersionBits
 
 }
 
+//@ts-expect-error
+Symbol.dispose ??= "__dispose";
+
 /**
  * When the number of elements reaches the limit, the `PacketBuffer` is drained
  */
-export class PacketBuffer<T>
+export class PacketBuffer<T> implements Disposable
 {
     #total_elements_count = 0;
     private stack: T[] = [];
@@ -209,7 +212,7 @@ export class PacketBuffer<T>
             this.forceDrain();
     }
 
-    public [Symbol.dispose ?? "__dispose"] ()
+    public [Symbol.dispose] ()
     {
         if (this.stack.length > 0)
             this.forceDrain();
