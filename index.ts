@@ -83,8 +83,8 @@ export function chanceRandom(elements: Record<string, number>): string
 export function equal(v1: any, v2: any): boolean
 {
     if (v1 === v2) return true;
-    else if (Array.isArray(v1) && arr_equal(v1, v2)) return true;
-    else if (typeof v1 === "object" && obj_equal(v1, v2)) return true;
+    else if (Array.isArray(v1) && Array.isArray(v2) && arr_equal(v1, v2)) return true;
+    else if (typeof v1 == "object" && typeof v2 == "object" && obj_equal(v1, v2)) return true;
     else return false;
 }
 
