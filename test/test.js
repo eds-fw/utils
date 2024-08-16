@@ -10,7 +10,7 @@ const {
     equal,
     quickTextCompare,
     deepCopy
-} = require("../dist/cjs/index");
+} = await import("../index.mjs");
 
 ;(async () => {
     console.log(`\tformatNumber(1234567890)\n\t\t${formatNumber(1234567890)}`);

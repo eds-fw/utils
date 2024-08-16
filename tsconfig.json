@@ -1,15 +1,10 @@
 {
-    "exclude": [
-        "./vault.json",
-        "./dist/",
-        "./node_modules/",
-        "./logs/",
-        "./benchmarks/",
-        "./launcher.js",
-        "./test/"
+    "include": [
+        "./index.mts"
     ],
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "./dist/",
+        "module": "ESNext",
+        "declaration": true
     }
 }

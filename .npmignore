@@ -5,6 +5,7 @@ benchmarks/
 node_modules/
 test/
 index.ts
+index.mts
 assets/*.psd
 **/vault.json
 tsconfig.*

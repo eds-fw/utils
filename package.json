@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "devDependencies": {
     "@types/array-equal": "^1.0.0",
     "@types/node": "^20.5.0",
@@ -6,7 +7,7 @@
   },
   "scripts": {
     "TS_inspect": "npx tsc --noEmit --watch",
-    "TS_build": "npx tsc -p tsconfig.cjs.json && npx tsc -p tsconfig.esm.json && npx tsc -p tsconfig.types.json"
+    "TS_build": "npx tsc"
   },
   "dependencies": {
     "array-equal": "^1.0.0",
@@ -16,7 +17,7 @@
   "name": "@eds-fw/utils",
   "version": "2.0.2",
   "description": "Tiny TypeScript utils: wait(), chanceRandom(), formatNumber(), equal(), quickTextCompare() and more",
-  "main": "index",
+  "main": "index.mjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eds-fw/utils.git"
@@ -28,23 +29,15 @@
   ],
   "author": "dtkdtk0",
   "license": "MIT",
-  "types": "./dist/index.d.ts",
+  "types": "index.d.mts",
   "bugs": {
     "url": "https://github.com/eds-fw/utils/issues"
   },
   "homepage": "https://github.com/eds-fw/utils#readme",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js",
-      "default": "./dist/esm/index.js"
-    }
-  },
   "typesVersions": {
     ">=4.2": {
       "*": [
-        "dist/types/index.d.ts"
+        "index.d.mts"
       ]
     }
   }
