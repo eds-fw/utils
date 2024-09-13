@@ -227,7 +227,7 @@ export function splitIntoPortions<T>(arr: T[], portionSize: number): T[][]
 {
     if (arr.length <= portionSize)
         return [arr];
-    const output: T[][] = [[]];
+    const output: T[][] = [];
     for (let i = 0; i < arr.length; i++)
         if (i % portionSize == 0)
             output.push([arr[i]]);
