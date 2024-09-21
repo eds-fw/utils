@@ -89,28 +89,6 @@ export function equal(v1: any, v2: any): boolean
 }
 
 /**
- * Fluently compares texts for the presence of the same
- */
-export function quickTextCompare(text1: string, text2: string): boolean
-{
-    let v1w = text1.split(' '), v1eq = 0;
-    let v2w = text2.split(' '), v2eq = 0;
-    let inaccuracy = Math.floor(v1w.length / 15) || 1;
-    for (const word of v1w)
-        if (v2w.includes(word))
-            v1eq++;
-    for (const word of v2w)
-        if (v1w.includes(word))
-            v2eq++;
-    if (v1eq + inaccuracy >= v2eq
-        && v2eq + inaccuracy >= v1eq
-        && v1eq + (inaccuracy * 1.5) >= v1w.length
-        && v2eq + (inaccuracy * 1.5) >= v2w.length
-    ) return true;
-    else return false;
-}
-
-/**
  * Checks if an array contains all specified values
  */
 export function includesAll<T extends any[]>(arr: T, values: T): boolean
@@ -128,44 +106,42 @@ export async function wait(time_ms: number): Promise<void>
     await setTimeout(time_ms);
 }
 
-/**
- * Creates a [deep copy](https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy) of an object
- * 
- * Supports only serializable objects (JSON-like)
- */
-export function deepCopy<T extends JSONLikeObj>(source: T): T
-{
-    return JSON.parse(JSON.stringify(source)) as T;
-}
-
 export namespace VersionBits
 {
-    export const zeroVersion = [0, 0];
+    export const zeroVersion = [0, 0, 0];
     export const delimiter = '.';
+    export type Version = [number, number, number];
 
-    export function from(input: string): number[]
+    /**
+     * Converts `"1.0.0"`(string) to `[1, 0, 0]`(array)
+     */
+    export function from(input: string): Version
     {
-        return Object.assign([], zeroVersion, input.split(delimiter).map(_ => Number(_))) as unknown as number[];
-    }
-    export function sum(version: number[], to_add: number[])
-    {
-        Object.assign(version, Object.assign(to_add.map(() => 0), version));
-        console.log(version)
-        to_add.forEach((x, i) => version[i] += x);
-    }
-    export function toString(version: number[]): string
-    {
-        return version.filter((x, i) => i > 1 ? x != 0 : true).join(delimiter);
+        return input.split(delimiter).map(_ => Number(_)) as Version;
     }
     /**
-     * @param majority `0` is 'patch', `1` is 'minor', `2` is 'major'
+     * Converts the version to a string, **removing extra zeros at the end**
+     * 
+     * Example: `[2,0,0]` -> `2`; `[1,2,0]` -> `1.2`
      */
-    export function increase(version: number[], count: number, majority: number)
+    export function toTrimmedString(version: Version): string
     {
-        const reversed_majority = version.length - majority - 1;
-        version[reversed_majority] += count;
-        if (reversed_majority + 1 < version.length)
-            for (let i = reversed_majority + 1; i < version.length; i++)
+        return version.filter((x, i) => i > 0 ? x != 0 : true).join(delimiter);
+    }
+    export function toString(version: Version): string
+    {
+        return version.join(delimiter);
+    }
+    /**
+     * Increases the specified number in the version by 1
+     * @param majority `"major"` is the first number, `"minor"` is second, etc.
+     */
+    export function increase(version: number[], majority: "patch" | "minor" | "major")
+    {
+        const index = ["major", "minor", "patch"].indexOf(majority);
+        version[index] += 1;
+        if (index + 1 < version.length)
+            for (let i = index + 1; i < version.length; i++)
                 version[i] = 0;
     }
 

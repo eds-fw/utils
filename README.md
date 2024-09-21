@@ -16,17 +16,16 @@
 - `arrRandom <T>(arr: T[]): T`
 - `chanceRandom (elements: Record<string, number>): string`
 - `equal (v1: any, v2: any): boolean`
-- `quickTextCompare (text1: string, text2: string): boolean`
 - `includesAll <T extends any[]>(arr: T, values: T): boolean`
 - *async* `wait (time_ms: number): Promise<void>`
-- `deepCopy <S extends JSONLikeObj>(source: S): S`
 - *namespace* `VersionBits`
 >- *var* `zeroVersion: number[]`
 >- *var* `delimiter: string`
->- `from (input: string): number[]`
->- `sum (version: number[], to_add: number[]): number[]`
->- `toString (version: number[]): string`
->- `increase (version: number[], count: number, majority: number): number[]`
+>- *type* `Version`
+>- `from (input: string): Version`
+>- `toTrimmedString (version: number[]): string`
+>- `toString (version: Version): string`
+>- `increase (version: Version, majority: "major"|"minor"|"patch"): Version`
 - *class* `PacketBuffer <T>`
 >- *constructor* `(drain_callback: (items: T[]) => unknown, limit: number, auto_drain: boolean = true)`
 >- *getter* `total_elements_count: number`
