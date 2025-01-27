@@ -2,7 +2,7 @@ import arr_equal from "array-equal";
 import obj_equal from "fast-deep-equal";
 import { readdirSync, statSync } from "fs";
 import { join as path_join, sep } from "path";
-import { setTimeout } from "timers/promises";
+import { setTimeout as asyncTimeout } from "timers/promises";
 
 /**
  * Nicely divides a number into units, tens, hundreds, thousands, etc. Example: `1234567` -> `1 234 567`
@@ -103,7 +103,7 @@ export function includesAll<T extends any[]>(arr: T, values: T): boolean
  */
 export async function wait(time_ms: number): Promise<void>
 {
-    await setTimeout(time_ms);
+    await asyncTimeout(time_ms);
 }
 
 export namespace VersionBits
@@ -194,6 +194,46 @@ export class PacketBuffer<T> implements Disposable
             this.forceDrain();
     }
 }
+
+
+
+type SomeFunction = () => unknown;
+
+/**
+ * Executes the specified sequence of actions with equal time intervals.
+ */
+export class ActionQueue
+{
+  private readonly cooldownMs: number;
+  private readonly queue: SomeFunction[] = [];
+  private timeout: NodeJS.Timeout | null = null;
+
+  public constructor(cooldownMs: number)
+  {
+    this.cooldownMs = cooldownMs;
+  }
+
+  public push(action: SomeFunction)
+  {
+    this.queue.push(action);
+    if (this.timeout == null) this.execChainedAction();
+  }
+
+  private createTimeout()
+  {
+    this.timeout ??= setTimeout(() => {
+      this.timeout = null;
+      this.execChainedAction()
+    }, this.cooldownMs);
+  }
+  private execChainedAction()
+  {
+    if (this.queue.length == 0) return;
+    this.queue.shift()?.();
+    this.createTimeout();
+  }
+}
+
 
 
 /**
