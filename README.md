@@ -4,7 +4,7 @@
 
 <b align="center">
     
-    Tiny utils: chanceRandom(), equal(), PacketBuffer, VersionBits, expandDir(), splitIntoPortions() and more
+    Tiny utils: chanceRandom(), equal(), PacketBuffer, VersionBits, ActionQueue, splitIntoPortions() and more
     
 </b>
 <hr>
@@ -32,6 +32,9 @@
 >- `put (item: T): void`
 >- *async* `forceDrain (): Promise<void>`
 >- supports `using` declarations
+- *class* `ActionQueue`
+>- *constructor* `(cooldownMs: number)`
+>- `push (action: () => unknown): void`
 - `splitIntoPortions <T>(arr: T[], portionSize: number): T[][]`
 - `expandDir (dir_path: string): string[]`
 - *type* `JSONSupported`
@@ -47,15 +50,6 @@ npm i @eds-fw/utils
 ```
 
 2. Use `utils`:
-```js
-// file.js, type: CJS
-const { random, arrRandom } = require("@eds-fw/utils");
-let colors = ["red", "green", "blue"];
-console.log(`Random int: ${random(1, 100)}, random color: ${arrRandom(colors)}`);
-//> Random int: 32, random color: blue
-//...it is one of 300 variants
-```
-...or:
 ```js
 // file.js, type: ESM
 import { random, arrRandom } from "@eds-fw/utils";
